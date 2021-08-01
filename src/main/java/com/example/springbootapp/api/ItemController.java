@@ -2,6 +2,7 @@ package com.example.springbootapp.api;
 
 import com.example.springbootapp.dto.ItemDTO;
 import com.example.springbootapp.entity.Item;
+import com.example.springbootapp.error.ResourceDuplicatedException;
 import com.example.springbootapp.error.ResourceNotFoundException;
 import com.example.springbootapp.service.ItemService;
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +56,17 @@ public class ItemController {
             itemDTOResponse = itemService.updateItem(id, itemDTORequest);
         } catch (ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e.getCause());
+        }
+        return ResponseEntity.ok(itemDTOResponse);
+    }
+
+    @PostMapping(value = "/create")
+    public ResponseEntity<?> createItem(@RequestBody ItemDTO itemDTORequest) {
+        ItemDTO itemDTOResponse;
+        try {
+            itemDTOResponse = itemService.createItem(itemDTORequest);
+        } catch (ResourceDuplicatedException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e.getCause());
         }
         return ResponseEntity.ok(itemDTOResponse);
     }
