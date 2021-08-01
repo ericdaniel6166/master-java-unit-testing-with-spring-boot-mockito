@@ -53,12 +53,12 @@ public class ItemServiceImpl implements ItemService {
             log.warn("Item not found, id: {}", id);
             throw new ResourceNotFoundException("id: " + id);
         }
-        Item item = modelMapper.map(itemDTORequest, Item.class);
-        item.setId(id);
-        Item result = itemRepository.saveAndFlush(item);
-        ItemDTO itemResponse = modelMapper.map(result, ItemDTO.class);
-        log.info("End UPDATE_ITEM_BY_ID, itemResponse: {}", itemResponse);
-        return itemResponse;
+        Item itemRequest = modelMapper.map(itemDTORequest, Item.class);
+        itemRequest.setId(id);
+        Item result = itemRepository.saveAndFlush(itemRequest);
+        ItemDTO itemDTOResponse = modelMapper.map(result, ItemDTO.class);
+        log.info("End UPDATE_ITEM_BY_ID, itemDTOResponse: {}", itemDTOResponse);
+        return itemDTOResponse;
     }
 
     @Override
@@ -66,12 +66,13 @@ public class ItemServiceImpl implements ItemService {
         log.info("Start CREATE_ITEM, itemDTORequest: {}", itemDTORequest);
         Optional<Item> itemOptional = itemRepository.findByName(itemDTORequest.getName());
         if (itemOptional.isPresent()){
+            log.warn("Item not found, name: {}", itemDTORequest.getName());
             throw new ResourceDuplicatedException("name: " + itemOptional.get().getName());
         }
-        Item itemNew = modelMapper.map(itemDTORequest, Item.class);
-        Item result = itemRepository.saveAndFlush(itemNew);
-        ItemDTO itemResponse = modelMapper.map(result, ItemDTO.class);
-        log.info("End CREATE_ITEM, itemResponse: {}", itemResponse);
-        return itemResponse;
+        Item itemRequest = modelMapper.map(itemDTORequest, Item.class);
+        Item result = itemRepository.saveAndFlush(itemRequest);
+        ItemDTO itemDTOResponse = modelMapper.map(result, ItemDTO.class);
+        log.info("End CREATE_ITEM, itemDTOResponse: {}", itemDTOResponse);
+        return itemDTOResponse;
     }
 }
