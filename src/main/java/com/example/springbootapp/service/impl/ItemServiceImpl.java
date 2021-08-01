@@ -66,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
         log.info("Start CREATE_ITEM, itemDTORequest: {}", itemDTORequest);
         Optional<Item> itemOptional = itemRepository.findByName(itemDTORequest.getName());
         if (itemOptional.isPresent()){
-            log.warn("Item not found, name: {}", itemDTORequest.getName());
+            log.warn("Item is duplicated, name: {}", itemDTORequest.getName());
             throw new ResourceDuplicatedException("name: " + itemOptional.get().getName());
         }
         Item itemRequest = modelMapper.map(itemDTORequest, Item.class);
